@@ -115,20 +115,23 @@ export const CampaignVisual: React.FC = () => {
     let animationFrameId: number;
     let time = 0;
 
-    // Check prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Safe check for prefers-reduced-motion
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)')?.matches;
 
-    // IntersectionObserver to pause when not visible
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          isVisibleRef.current = entry.isIntersecting;
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (containerRef.current) {
+    // Safe IntersectionObserver
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined' && containerRef.current) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isVisibleRef.current = entry.isIntersecting;
+          });
+        },
+        { threshold: 0.1 }
+      );
       observer.observe(containerRef.current);
     }
 
@@ -142,29 +145,34 @@ export const CampaignVisual: React.FC = () => {
     ];
 
     const resize = () => {
-      if (!canvas || !containerRef.current) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const width = containerRef.current.clientWidth;
-      const height = Math.max(340, Math.min(440, width * 0.48));
+      try {
+        if (!canvas || !containerRef.current) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.max(300, containerRef.current.clientWidth || 800);
+        const height = Math.max(340, Math.min(440, width * 0.48));
 
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+      } catch {
+        // Fallback safely if canvas scaling fails
+      }
     };
 
     resize();
     window.addEventListener('resize', resize);
 
     const render = () => {
-      animationFrameId = requestAnimationFrame(render);
+      try {
+        animationFrameId = requestAnimationFrame(render);
 
-      if (!isVisibleRef.current) return;
+        if (!isVisibleRef.current) return;
 
-      const width = containerRef.current ? containerRef.current.clientWidth : 800;
-      const height = Math.max(340, Math.min(440, width * 0.48));
+        const width = containerRef.current ? Math.max(300, containerRef.current.clientWidth || 800) : 800;
+        const height = Math.max(340, Math.min(440, width * 0.48));
 
       ctx.clearRect(0, 0, width, height);
 
@@ -336,6 +344,9 @@ export const CampaignVisual: React.FC = () => {
           ctx.fillText(node.label, node.px, node.py + node.radius + 14 * node.perspective);
         }
       });
+      } catch {
+        // Safe graceful fallback if frame render fails
+      }
     };
 
     render();
@@ -343,7 +354,9 @@ export const CampaignVisual: React.FC = () => {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resize);
-      observer.disconnect();
+      if (observer) {
+        observer.disconnect();
+      }
     };
   }, [activeStage]);
 

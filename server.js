@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import fs from "fs";
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +16,13 @@ app.get("/api/health", (_req, res) => {
     service: "ADROVIX Production Server"
   });
 });
-const distPath = path.resolve(__dirname, "dist");
+let distPath = path.resolve(__dirname, "dist");
+if (!fs.existsSync(distPath)) {
+  const cwdDist = path.resolve(process.cwd(), "dist");
+  if (fs.existsSync(cwdDist)) {
+    distPath = cwdDist;
+  }
+}
 app.use(
   express.static(distPath, {
     maxAge: "1y",
@@ -30,9 +37,21 @@ app.use(
   })
 );
 const publicPath = path.resolve(__dirname, "public");
-app.use(express.static(publicPath));
-app.get("*", (_req, res) => {
-  res.sendFile(path.join(distPath, "index.html"), (err) => {
+if (fs.existsSync(publicPath)) {
+  app.use(express.static(publicPath));
+}
+app.use("/assets", (_req, res) => {
+  res.status(404).type("text/plain").send("Asset not found");
+});
+app.use("/api/*", (_req, res) => {
+  res.status(404).json({ error: "API route not found" });
+});
+app.get("*", (req, res, next) => {
+  if (path.extname(req.path)) {
+    return res.status(404).type("text/plain").send("File not found");
+  }
+  const indexPath = path.join(distPath, "index.html");
+  res.sendFile(indexPath, (err) => {
     if (err) {
       res.status(500).send("Error loading ADROVIX application");
     }

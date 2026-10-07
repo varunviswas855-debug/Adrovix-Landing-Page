@@ -15,34 +15,50 @@ export const SectionReveal: React.FC<SectionRevealProps> = ({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    // Check if user prefers reduced motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
+    // If not running in a browser with IntersectionObserver support, reveal immediately
+    if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
       setIsVisible(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(el); // Only animate once
-        }
-      },
-      {
-        threshold: 0.05,
-        rootMargin: '0px 0px -30px 0px',
+    const el = ref.current;
+    if (!el) {
+      setIsVisible(true);
+      return;
+    }
+
+    try {
+      const prefersReducedMotion =
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)')?.matches;
+
+      if (prefersReducedMotion) {
+        setIsVisible(true);
+        return;
       }
-    );
 
-    observer.observe(el);
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries && entries[0] && entries[0].isIntersecting) {
+            setIsVisible(true);
+            observer.disconnect();
+          }
+        },
+        {
+          threshold: 0.01,
+          rootMargin: '0px 0px 120px 0px',
+        }
+      );
 
-    return () => {
-      observer.disconnect();
-    };
+      observer.observe(el);
+
+      return () => {
+        observer.disconnect();
+      };
+    } catch {
+      // In case of any browser runtime error, guarantee visibility
+      setIsVisible(true);
+    }
   }, []);
 
   return (
