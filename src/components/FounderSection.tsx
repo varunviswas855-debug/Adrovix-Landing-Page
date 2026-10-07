@@ -1,5 +1,4 @@
 import React from 'react';
-import varunPhoto from '../assets/images/varun-biswas.jpg';
 import {
   MENTOR_NAME,
   MENTOR_ROLE,
@@ -32,15 +31,22 @@ export const FounderSection: React.FC = () => {
             {/* Left Slot: Real Founder Photograph (Static Project Asset) */}
             <div className="md:col-span-5 flex flex-col items-center">
               <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[4/5] rounded-2xl overflow-hidden border border-white/15 shadow-2xl bg-[#0e1626]">
-                {/* Real Founder Photo */}
+                {/* Real Founder Photo - Static Project Asset */}
                 <img
-                  src={varunPhoto}
+                  src="/images/varun-biswas.jpg"
                   alt="Varun Biswas — Lead Mentor & Founder, ADROVIX"
                   style={{ height: '411.475px' }}
                   className="w-full object-cover object-center select-none"
                   referrerPolicy="no-referrer"
                   loading="eager"
                   decoding="async"
+                  onError={(e) => {
+                    // Safe fallback to alternate static path if needed without breaking React
+                    const fallback = '/1000112240.jpg';
+                    if (!e.currentTarget.src.endsWith(fallback)) {
+                      e.currentTarget.src = fallback;
+                    }
+                  }}
                 />
 
                 {/* Subtle vignette scrim */}

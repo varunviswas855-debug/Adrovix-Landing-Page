@@ -23,40 +23,52 @@ import { MobileStickyBar } from './components/MobileStickyBar';
 import { SectionReveal } from './components/SectionReveal';
 import { LegalPage, PolicyType } from './components/legal/LegalPage';
 
+const getPolicyFromLocation = (): PolicyType | null => {
+  if (typeof window === 'undefined') return null;
+  // Support both /terms and #terms pathname/hash routes
+  const path = window.location.pathname.replace(/^\/+/g, '').replace(/\/+$/g, '').toLowerCase();
+  if (path === 'terms' || path === 'privacy' || path === 'refund') {
+    return path as PolicyType;
+  }
+  const hash = window.location.hash.replace(/^#\/?/g, '').toLowerCase();
+  if (hash === 'terms' || hash === 'privacy' || hash === 'refund') {
+    return hash as PolicyType;
+  }
+  return null;
+};
+
 export default function App() {
-  const [activePolicy, setActivePolicy] = useState<PolicyType | null>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.replace('#', '').toLowerCase();
-      if (hash === 'terms' || hash === 'refund' || hash === 'privacy') {
-        return hash as PolicyType;
-      }
-    }
-    return null;
-  });
+  const [activePolicy, setActivePolicy] = useState<PolicyType | null>(getPolicyFromLocation);
 
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '').toLowerCase();
-      if (hash === 'terms' || hash === 'refund' || hash === 'privacy') {
-        setActivePolicy(hash as PolicyType);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        setActivePolicy(null);
-      }
+    const handleLocationChange = () => {
+      setActivePolicy(getPolicyFromLocation());
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
   }, []);
 
   const openPolicy = (policy: PolicyType) => {
-    window.location.hash = `#${policy}`;
+    try {
+      window.history.pushState(null, '', `/${policy}`);
+    } catch {
+      window.location.hash = `#${policy}`;
+    }
     setActivePolicy(policy);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const backToHome = () => {
-    window.history.pushState(null, '', window.location.pathname);
+    try {
+      window.history.pushState(null, '', '/');
+    } catch {
+      window.location.hash = '';
+    }
     setActivePolicy(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -66,7 +78,11 @@ export default function App() {
       <LegalPage
         activePolicy={activePolicy}
         onSelectPolicy={(policy) => {
-          window.location.hash = `#${policy}`;
+          try {
+            window.history.pushState(null, '', `/${policy}`);
+          } catch {
+            window.location.hash = `#${policy}`;
+          }
           setActivePolicy(policy);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
