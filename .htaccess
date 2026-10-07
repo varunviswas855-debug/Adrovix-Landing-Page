@@ -1,0 +1,53 @@
+# ADROVIX Production Apache/LiteSpeed Configuration for Hostinger / cPanel / VPS
+
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType image/svg+xml .svg
+  AddType image/png .png
+  AddType image/jpeg .jpg .jpeg
+  AddType application/json .json
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Security: Do not allow direct access to sensitive root source folders
+  RewriteRule ^(node_modules|src|\.git|\.env) - [F,L]
+
+  # 1. Direct pass-through if request starts with /dist/
+  RewriteRule ^dist/(.*)$ - [L]
+
+  # 2. If the requested file or asset exists inside /dist/, serve it from /dist/
+  RewriteCond %{DOCUMENT_ROOT}/dist/$1 -f
+  RewriteRule ^(.*)$ dist/$1 [L]
+
+  # 3. If accessing root /, serve dist/index.html if available
+  RewriteCond %{DOCUMENT_ROOT}/dist/index.html -f
+  RewriteRule ^$ dist/index.html [L]
+
+  # 4. SPA Fallback: Rewrite all client-side routes (/terms, /privacy, /refund, etc.) to dist/index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/dist/index.html -f
+  RewriteRule . dist/index.html [L]
+
+  # 5. Standard fallback if dist is already the document root
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . index.html [L]
+</IfModule>
+
+# Caching for Production Static Assets
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+Options -Indexes
