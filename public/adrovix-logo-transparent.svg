@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 690 120" width="690" height="120" fill="none">
+  <defs>
+    <!-- Multi-stop High-Gloss Chrome Metallic Gradient -->
+    <linearGradient id="metalChrome" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="12%" stop-color="#e2e8f0" />
+      <stop offset="38%" stop-color="#cbd5e1" />
+      <stop offset="48%" stop-color="#64748b" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="52%" stop-color="#94a3b8" />
+      <stop offset="75%" stop-color="#f8fafc" />
+      <stop offset="88%" stop-color="#cbd5e1" />
+      <stop offset="100%" stop-color="#64748b" />
+    </linearGradient>
+
+    <!-- Bevel Specular Top-Light Highlight -->
+    <linearGradient id="bevelLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+      <stop offset="40%" stop-color="#cbd5e1" stop-opacity="0.8" />
+      <stop offset="70%" stop-color="#64748b" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Subtle Cyan Under-Reflection on Chrome Base -->
+    <linearGradient id="underGlow" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.6" />
+      <stop offset="25%" stop-color="#38bdf8" stop-opacity="0.25" />
+      <stop offset="60%" stop-color="#000000" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Electric Cyan Neon Gradient for "X" -->
+    <linearGradient id="neonXGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="20%" stop-color="#7dd3fc" />
+      <stop offset="50%" stop-color="#00f0ff" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <linearGradient id="neonXBorder" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e0f2fe" />
+      <stop offset="50%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+
+    <!-- Neon Glow Filter -->
+    <filter id="neonFilter" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3.5" result="blur1" />
+      <feGaussianBlur stdDeviation="7" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Drop Shadow for High Contrast on Dark Backgrounds -->
+    <filter id="shadowFilter" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.75" />
+    </filter>
+  </defs>
+
+  <!-- Group with Drop Shadow (100% Transparent Background) -->
+  <g filter="url(#shadowFilter)">
+    <!-- ==================== LETTER "A" ==================== -->
+    <g id="letter-A">
+      <path
+        d="M 45,15 L 10,105 L 32,105 L 42,78 L 68,78 L 78,105 L 100,105 L 65,15 Z M 55,42 L 63,64 L 47,64 Z"
+        fill="url(#metalChrome)"
+        stroke="url(#bevelLight)"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <!-- Cyan underglow reflection -->
+      <path
+        d="M 10,105 L 32,105 L 42,78 L 68,78 L 78,105 L 100,105 Z"
+        fill="url(#underGlow)"
+        opacity="0.7"
+      />
+    </g>
+
+    <!-- ==================== LETTER "D" ==================== -->
+    <g id="letter-D">
+      <path
+        d="M 112,15 L 156,15 C 182,15 198,32 198,60 C 198,88 182,105 156,105 L 112,105 Z M 133,33 L 152,33 C 168,33 176,43 176,60 C 176,77 168,87 152,87 L 133,87 Z"
+        fill="url(#metalChrome)"
+        stroke="url(#bevelLight)"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M 112,85 L 156,85 C 175,85 185,95 185,105 L 112,105 Z"
+        fill="url(#underGlow)"
+        opacity="0.6"
+      />
+    </g>
+
+    <!-- ==================== LETTER "R" ==================== -->
+    <g id="letter-R">
+      <path
+        d="M 210,15 L 254,15 C 276,15 292,27 292,49 C 292,64 282,75 268,79 L 295,105 L 270,105 L 246,82 L 231,82 L 231,105 L 210,105 Z M 231,33 L 252,33 C 264,33 271,39 271,49 C 271,59 264,65 252,65 L 231,65 Z"
+        fill="url(#metalChrome)"
+        stroke="url(#bevelLight)"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M 210,85 L 295,105 L 210,105 Z"
+        fill="url(#underGlow)"
+        opacity="0.6"
+      />
+    </g>
+
+    <!-- ==================== LETTER "O" ==================== -->
+    <g id="letter-O">
+      <path
+        d="M 346,15 C 376,15 398,34 398,60 C 398,86 376,105 346,105 C 316,105 294,86 294,60 C 294,34 316,15 346,15 Z M 346,33 C 330,33 317,44 317,60 C 317,76 330,87 346,87 C 362,87 375,76 375,60 C 375,44 362,33 346,33 Z"
+        fill="url(#metalChrome)"
+        stroke="url(#bevelLight)"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M 294,85 C 310,100 330,105 346,105 C 362,105 382,100 398,85 Z"
+        fill="url(#underGlow)"
+        opacity="0.6"
+      />
+    </g>
+
+    <!-- ==================== LETTER "V" ==================== -->
+    <g id="letter-V">
+      <path
+        d="M 408,15 L 430,15 L 452,83 L 474,15 L 496,15 L 463,105 L 441,105 Z"
+        fill="url(#metalChrome)"
+        stroke="url(#bevelLight)"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M 441,85 L 452,105 L 463,85 Z"
+        fill="url(#underGlow)"
+        opacity="0.7"
+      />
+    </g>
+
+    <!-- ==================== LETTER "I" ==================== -->
+    <g id="letter-I">
+      <path
+        d="M 507,15 L 528,15 L 528,105 L 507,105 Z"
+        fill="url(#metalChrome)"
+        stroke="url(#bevelLight)"
+        stroke-width="1.2"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M 507,85 L 528,85 L 528,105 L 507,105 Z"
+        fill="url(#underGlow)"
+        opacity="0.6"
+      />
+    </g>
+
+    <!-- ==================== LETTER "X" (ELECTRIC NEON CYAN) ==================== -->
+    <g id="letter-X">
+      <!-- Ambient Bloom Behind X -->
+      <path
+        d="M 548,15 L 573,15 L 610,58 L 647,15 L 672,15 L 623,60 L 674,105 L 649,105 L 610,63 L 571,105 L 546,105 L 597,60 Z"
+        fill="#00f0ff"
+        opacity="0.6"
+        filter="url(#neonFilter)"
+      />
+
+      <!-- Solid Core Neon X -->
+      <path
+        d="M 548,15 L 573,15 L 610,58 L 647,15 L 672,15 L 623,60 L 674,105 L 649,105 L 610,63 L 571,105 L 546,105 L 597,60 Z"
+        fill="url(#neonXGrad)"
+        stroke="url(#neonXBorder)"
+        stroke-width="1.5"
+        stroke-linejoin="round"
+      />
+
+      <!-- Signature Lens Flare / Glint on Top-Right Corner of X -->
+      <g transform="translate(670, 15)">
+        <circle cx="0" cy="0" r="3.5" fill="#ffffff" filter="drop-shadow(0 0 5px #00f0ff)" />
+        <ellipse cx="0" cy="0" rx="22" ry="1.2" fill="#ffffff" opacity="0.95" filter="drop-shadow(0 0 3px #00f0ff)" />
+        <ellipse cx="0" cy="0" rx="1.2" ry="22" fill="#ffffff" opacity="0.95" filter="drop-shadow(0 0 3px #00f0ff)" />
+        <ellipse cx="0" cy="0" rx="13" ry="1" transform="rotate(45)" fill="#38bdf8" opacity="0.85" />
+        <ellipse cx="0" cy="0" rx="13" ry="1" transform="rotate(-45)" fill="#38bdf8" opacity="0.85" />
+      </g>
+    </g>
+  </g>
+</svg>
